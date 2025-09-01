@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Selection</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <div class="container">
+
+      <form action="/" method="POST">
+          <select id="materials" name="materials" multiple="multiple" style="width: 300px;">
+            <option value="Cotton">Cotton</option>
+            <option value="Wool">Wool</option>
+            <option value="Paper">Paper</option>
+            <option value="Jute">Jute</option>
+            <option value="Bamboo">Bamboo</option>
+            <option value="Hemp">Hemp</option>
+            <option value="Silk">Silk</option>
+            <option value="PLA Bioplastic">PLA Bioplastic</option>
+            <option value="Corn Starch Plastic">Corn Starch Plastic</option>
+            <option value="Bagasse">Bagasse</option>
+            <option value="Cork">Cork</option>
+            <option value="Coir Fiber">Coir Fiber</option>
+            <option value="Banana Fiber">Banana Fiber</option>
+            <option value="Linen">Linen</option>
+            <option value="Kenaf Fiber">Kenaf Fiber</option>
+            <option value="Palm Leaf">Palm Leaf</option>
+            <option value="Areca Leaf">Areca Leaf</option>
+            <option value="Natural Rubber">Natural Rubber</option>
+            <option value="Leather (Natural)">Leather (Natural)</option>
+            <option value="Recycled Paper">Recycled Paper</option>
+            <option value="PET Plastic">PET Plastic</option>
+            <option value="HDPE Plastic">HDPE Plastic</option>
+            <option value="LDPE Plastic">LDPE Plastic</option>
+            <option value="PVC Plastic">PVC Plastic</option>
+            <option value="Polystyrene (Styrofoam)">Polystyrene (Styrofoam)</option>
+            <option value="Nylon">Nylon</option>
+            <option value="Polyester">Polyester</option>
+            <option value="Polycarbonate">Polycarbonate</option>
+            <option value="Acrylic (PMMA)">Acrylic (PMMA)</option>
+            <option value="Polypropylene (PP)">Polypropylene (PP)</option>
+            <option value="ABS Plastic">ABS Plastic</option>
+            <option value="Polyurethane Foam">Polyurethane Foam</option>
+            <option value="Synthetic Rubber">Synthetic Rubber</option>
+            <option value="Glass">Glass</option>
+            <option value="Aluminum">Aluminum</option>
+            <option value="Steel">Steel</option>
+            <option value="Copper">Copper</option>
+            <option value="Iron">Iron</option>
+            <option value="Tin">Tin</option>
+            <option value="Zinc">Zinc</option>
+            <option value="Titanium">Titanium</option>
+            <option value="Concrete">Concrete</option>
+            <option value="Brick">Brick</option>
+            <option value="Ceramic">Ceramic</option>
+            <option value="Asphalt">Asphalt</option>
+            <option value="Coal Tar">Coal Tar</option>
+            <option value="Bitumen">Bitumen</option>
+            <option value="Gypsum">Gypsum</option>
+            <option value="Rock">Rock</option>
+            <option value="Sand">Sand</option>
+            <option value="Rice Husk">Rice Husk</option>
+            <option value="Sugarcane Fiber">Sugarcane Fiber</option>
+            <option value="Pine Needles">Pine Needles</option>
+            <option value="Coconut Shell">Coconut Shell</option>
+            <option value="Straw">Straw</option>
+            <option value="Soy Protein Plastic">Soy Protein Plastic</option>
+            <option value="Starch-based Foam">Starch-based Foam</option>
+            <option value="Cassava Plastic">Cassava Plastic</option>
+            <option value="Peanut Shells">Peanut Shells</option>
+            <option value="Sunflower Husk">Sunflower Husk</option>
+            <option value="Palm Oil Polymer">Palm Oil Polymer</option>
+            <option value="Lignin Bioplastic">Lignin Bioplastic</option>
+            <option value="Chitosan">Chitosan</option>
+            <option value="Shellac">Shellac</option>
+            <option value="Gelatin">Gelatin</option>
+            <option value="Casein Plastic">Casein Plastic</option>
+            <option value="Feathers">Feathers</option>
+            <option value="Hair">Hair</option>
+            <option value="Bone">Bone</option>
+            <option value="Seaweed Bioplastic">Seaweed Bioplastic</option>
+            <option value="Agar Polymer">Agar Polymer</option>
+            <option value="Alginate">Alginate</option>
+            <option value="Mushroom Mycelium">Mushroom Mycelium</option>
+            <option value="Peat">Peat</option>
+            <option value="Compostable PLA Blend">Compostable PLA Blend</option>
+            <option value="PHA Bioplastic">PHA Bioplastic</option>
+            <option value="Cellophane">Cellophane</option>
+            <option value="Rayon">Rayon</option>
+            <option value="Lyocell">Lyocell</option>
+            <option value="Viscose">Viscose</option>
+          </select>
+
+          <input type="submit" value="Submit">
+      </form>
+    </div>
+    
+    <div class="container">
+      {% if materials %}
+      <form id="quantityForm" action="/print-tags" method="POST" onsubmit="return validateQuantities();">
+        <h2>Enter name of the product:</h2>
+        <input type="text" name="prod_name" placeholder="Enter Product name" class="quantity-input">
+        
+        <h2>Enter quantities for selected materials:</h2>
+        {% for m in materials %}
+          <label>{{ m }}</label>
+          <input type="number" name="quantity_{{ m }}" class="quantity-input" placeholder="Quantity for {{ m }}" min="0" max="100" required>
+          <input type="hidden" name="selected_materials" value="{{ m }}">
+          <br>
+        {% endfor %}
+        <p id="error-message" style="color: red; display: none;"></p>
+        <input type="submit" value="Print Tags">
+      </form>
+    {% endif %}
+
+    </div>
+  
+    <script>
+      $(document).ready(function() {
+        $('#materials').select2({
+          placeholder: "Choose materials",
+          allowClear: true
+        });
+      });
+
+      function validateQuantities() {
+        let inputs = document.querySelectorAll(".quantity-input");
+        let total = 0;
+
+        inputs.forEach(input => {
+          let val = parseFloat(input.value) || 0;
+          total += val;
+        });
+
+        if (total > 100) {
+          let errorMsg = document.getElementById("error-message");
+          errorMsg.innerText = "❌ The total quantity cannot exceed 100%. Current total: " + total + "%";
+          errorMsg.style.display = "block";
+          return false; 
+        }
+
+        return true; 
+      }
+    </script>
+</body>
+</html>
